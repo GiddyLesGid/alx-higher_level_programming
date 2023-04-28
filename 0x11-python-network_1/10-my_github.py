@@ -4,19 +4,10 @@ and uses the GitHub API to display the user id
 """
 import sys
 import requests
+from requests.auth import HTTPBasicAuth
+
 
 if __name__ == "__main__":
-    username = sys.argv[1]
-    token = sys.argv[2]
-
-    url = "https://api.github.com/user"
-    headers = {"Accept": "application/vnd.github.v3+json"}
-    auth = (username, token)
-
-    response = requests.get(url, headers=headers, auth=auth)
-
-    if response.status_code == 200:
-        data = response.json()
-        print(data["id"])
-    else:
-        print("None")
+    auth = HTTPBasicAuth(sys.argv[1], sys.argv[2])
+    r = requests.get("https://api.github.com/user", auth=auth)
+    print(r.json().get("id"))
