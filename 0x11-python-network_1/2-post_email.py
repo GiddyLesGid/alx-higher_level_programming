@@ -24,4 +24,3 @@ if __name__ == "__main__":
     # send the request and display the response body
     with urllib.request.urlopen(request) as response:
         print(response.read().decode("utf-8"))
-
