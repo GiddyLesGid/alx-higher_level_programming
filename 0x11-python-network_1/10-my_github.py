@@ -1,6 +1,7 @@
 #!/usr/bin/python3
-"""A script that takes in a GitHub username and password (personal access token)
-and uses the GitHub API to display the user id
+"""A script that:
+- takes your GitHub credentials (username and password)
+- uses the GitHub API to display your id
 """
 import sys
 import requests
