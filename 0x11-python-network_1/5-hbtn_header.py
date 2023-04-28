@@ -11,7 +11,6 @@ Usage: python3 script.py <url>
 
 Example: python3 script.py https://www.example.com
 """
-
 import sys
 import requests
 
