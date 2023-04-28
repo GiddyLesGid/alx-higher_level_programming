@@ -1,44 +1,47 @@
 #!/usr/bin/python3
 """
-Fetches the 10 most recent commits of a given GitHub repository for a user.
+Lists the 10 most recent commits on a given GitHub repository.
 """
 
 import sys
 import requests
 
 
-def fetch_commits(repo_name: str, owner_name: str) -> None:
+def get_recent_commits(owner, repo):
     """
-    Fetches the 10 most recent commits of a given GitHub repository for a user
-    and prints the SHA and the author name.
+    Retrieves the 10 most recent commits of a GitHub repository.
 
     Args:
-        repo_name (str): Name of the repository.
-        owner_name (str): Owner of the repository.
+        owner (str): The repository owner's GitHub username.
+        repo (str): The name of the repository.
 
     Returns:
-        None
+        List of dictionaries representing the 10 most recent commits. Each
+        dictionary contains the commit's SHA hash and author name.
     """
-    url = f"https://api.github.com/repos/{owner_name}/{repo_name}/commits"
-
-    # Sends a GET request to the GitHub API
-    response = requests.get(url)
-
-    # Parses the JSON response into a Python dictionary
-    commits = response.json()
-
-    # Prints the SHA and the author name of the 10 most recent commits
-    for i in range(10):
-        sha = commits[i].get("sha")
-        author = commits[i].get("commit").get("author").get("name")
-        print(f"{sha}: {author}")
+    url = f"https://api.github.com/repos/{owner}/{repo}/commits"
+    r = requests.get(url)
+    if r.status_code != 200:
+        print(f"Error: Could not retrieve commits from {url}")
+        sys.exit(1)
+    commits = r.json()
+    recent_commits = []
+    for i in range(min(10, len(commits))):
+        commit_info = {"sha": commits[i].get("sha"),
+                       "author": commits[i].get("commit").get("author").get("name")}
+        recent_commits.append(commit_info)
+    return recent_commits
 
 
 if __name__ == "__main__":
-    # Gets the repository name and owner name from command-line arguments
-    repo_name = sys.argv[1]
-    owner_name = sys.argv[2]
+    if len(sys.argv) != 3:
+        print("Usage: ./recent_commits.py <owner> <repo>")
+        sys.exit(1)
 
-    # Fetches the 10 most recent commits for the given repository and owner
-    fetch_commits(repo_name, owner_name)
+    owner = sys.argv[1]
+    repo = sys.argv[2]
+    recent_commits = get_recent_commits(owner, repo)
+
+    for commit in recent_commits:
+        print("{}: {}".format(commit["sha"], commit["author"]))
 
