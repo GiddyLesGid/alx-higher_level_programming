@@ -2,8 +2,7 @@
 
 const request = require('request');
 
-const movieId = process.argv[2];
-const host = `https://swapi-api.alx-tools.com/api/films/${movieId}`;
+const host = 'https://swapi-api.alx-tools.com/api/films/'.concat('', process.argv[2]);
 
 request(host, function (err, res, body) {
   if (err) {
