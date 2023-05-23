@@ -1,3 +1,5 @@
+#!/usr/bin/node
+
 const request = require('request');
 
 const movieId = process.argv[2];
@@ -10,3 +12,4 @@ request(host, function (err, res, body) {
   }
   console.log(JSON.parse(body).title);
 });
+
